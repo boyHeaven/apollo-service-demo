@@ -1,0 +1,93 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.7.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            url "http://192.168.2.249:8081/nexus/content/groups/public"
+        }
+        mavenCentral()
+        jcenter()
+
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "com.moowork.gradle:gradle-node-plugin:0.10"
+    }
+}
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'spring-boot'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply plugin: 'jacoco'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenLocal()
+        maven {
+            url "http://192.168.2.249:8081/nexus/content/groups/public"
+        }
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-starter")
+        compile('org.springframework.boot:spring-boot-starter-actuator')
+        compile('org.springframework.cloud:spring-cloud-starter-eureka')
+        compile('org.springframework.cloud:spring-cloud-starter-config')
+        compile('org.springframework.boot:spring-boot-starter-web')
+        compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+        compile('org.springframework.boot:spring-boot-starter-data-jpa')
+        compile('org.springframework.boot:spring-boot-starter-amqp')
+        compile("org.springframework.boot:spring-boot-devtools")
+        compile('com.h2database:h2')
+
+        testCompile('org.springframework.boot:spring-boot-starter-test')
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+    //spring cloud netflix oss version
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.SR3"
+        }
+    }
+
+//gradle command param transfer to springBoot
+    bootRun {
+        systemProperties = System.properties
+    }
+
+
+
+
+
+    group 'cb.com.yxb.apollo'
+    version '1.0-SNAPSHOT'
+}
+
+configure(rootProject) {
+
+    description = 'The SpringCloud Microservices Project.'
+
+    apply plugin: 'groovy'
+
+
+    task wrapper(type: Wrapper) {
+        group = 'build setup'
+        description = 'Generates gradlew[.bat] scripts.'
+
+        gradleVersion = '3.5'
+        distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+
+    }
+
+    // don't publish the default jar for the root project
+    configurations.archives.artifacts.clear()
+}

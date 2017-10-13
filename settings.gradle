@@ -1,0 +1,3 @@
+rootProject.name = 'apollo-service-demo'
+include 'config-center'
+
